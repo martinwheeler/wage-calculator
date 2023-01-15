@@ -34,7 +34,6 @@
   }
 }
 
-
 .title {
   font-size: 3rem;
   margin-bottom: 50px;
@@ -56,4 +55,15 @@
 .answer {
   font-size: 1.5rem;
   margin-top: 1rem;
+}
+
+.Finance-form {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }

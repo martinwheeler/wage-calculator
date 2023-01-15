@@ -1,6 +1,7 @@
 import "./App.css";
 import Select from "./Select";
 import { calculatePay } from "./utils";
+import FinanceDataInput from "./Components/FinanceDataInput/FinanaceDataInput"
 
 function App() {
   return (
@@ -22,5 +23,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
