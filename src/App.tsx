@@ -1,13 +1,19 @@
 import "./App.css";
 import Select from "./Select";
 import { calculatePay } from "./utils";
-import FinanceDataInput from "./Components/FinanceDataInput/FinanaceDataInput"
+import FinanceDataInput from "./Components/FinanceDataInput/FinanaceDataInput";
+import TypingEffect from "./Components/TypingEffect";
 
 function App() {
   return (
     <div className="App">
       <div className="title">Wage Calculator</div>
-      <div className="question">Which one are you?</div>
+      <div>
+        <TypingEffect>Hi there!</TypingEffect>
+      </div>
+      <div className="question">
+        <TypingEffect>Which one are you?</TypingEffect>
+      </div>
       <div className="answer">
         1. I need to figure out what to charge hourly, I'm currently on an
         annual salary.
