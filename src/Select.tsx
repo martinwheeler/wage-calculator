@@ -1,4 +1,5 @@
 import Downshift, { useSelect } from "downshift";
+import cx from "classnames";
 
 interface Props {
   items: { value: string }[];
@@ -20,31 +21,33 @@ const Select = ({ items }: Props) => {
   });
 
   return (
-    <span>
-      <span>
-        <span {...getToggleButtonProps()}>
-          <span>{selectedItem ? selectedItem.value : "hourly"}</span>
-        </span>
+    <div className="inline-flex flex-col">
+      <span
+        {...getToggleButtonProps()}
+        className="bg-black/50 rounded py-0.25 px-0.5 cursor-pointer"
+      >
+        <span>{selectedItem ? selectedItem.value : "hourly"}</span>
       </span>
 
-      {isOpen && (
-        <ul {...getMenuProps()}>
-          {items.map((item, index) => (
-            <li
-              //   className={cx(
-              //     highlightedIndex === index && "bg-blue-300",
-              //     selectedItem === item && "font-bold",
-              //     "py-2 px-3 shadow-sm flex flex-col"
-              //   )}
-              key={`${item.value}${index}`}
-              {...getItemProps({ item, index })}
-            >
-              <span>{item.value}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </span>
+      <div className="inline relative">
+        {isOpen && (
+          <ul {...getMenuProps()} className="absolute">
+            {items.map((item, index) => (
+              <li
+                className={cx("py-0.25 px-0.5 cursor-pointer", {
+                  "bg-blue-100": highlightedIndex === index,
+                  "font-bold": selectedItem === item,
+                })}
+                key={`${item.value}${index}`}
+                {...getItemProps({ item, index })}
+              >
+                <span>{item.value}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 };
 
