@@ -17,7 +17,7 @@ const DEFAULT_TAX_PERCENTAGE = 0.33; // Safest to assume 33% tax
 const TOTAL_DAYS_AVAILABLE_TO_WORK = 52 * 5; // 52 weeks in a year, 5 days a week
 
 const tapLog = (title: string, data: any) => {
-  console.log(title, data);
+  // console.log(title, data);
   return data;
 };
 

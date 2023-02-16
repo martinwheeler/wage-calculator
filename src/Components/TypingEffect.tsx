@@ -1,25 +1,119 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 
 interface Props {
   children: string;
-  minSpeed?: number;
-  maxSpeed?: number;
+  typingSpeed?: number;
 }
 
-const TypingEffect = ({ children, minSpeed = 50, maxSpeed = 100 }: Props) => {
+interface TypingEffectProps {
+  text: string;
+  typingSpeed: number;
+  finished: boolean;
+}
+
+const TypingEffectContext = createContext<
+  [TypingEffectProps[], React.Dispatch<any>] | []
+>([]);
+
+const initialTypingEffects: TypingEffectProps[] = [];
+
+const typingEffectReducer = (state: TypingEffectProps[], action: any) => {
+  switch (action.type) {
+    case "ADD":
+      // Don't add the same typing effect twice
+      if (state.findIndex((t) => t.text === action.payload.text) > -1) {
+        return state;
+      } else {
+        return [...state, { ...action.payload, finished: false }];
+      }
+    case "FINISHED":
+      const index = state.findIndex(
+        (t) => t.text === action.payload.text && !t.finished
+      );
+      // Don't mark the same typing effect as finished twice
+      if (index === -1) {
+        console.log("Already finished");
+        return state;
+      } else {
+        console.log("Marking as finished");
+        return state.map((t, i) => {
+          if (i === index) {
+            return {
+              ...t,
+              finished: true,
+            };
+          } else {
+            return t;
+          }
+        });
+      }
+    default:
+      return state;
+  }
+};
+
+export const TypingEffectProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [typingEffects, dispatch] = useReducer(
+    typingEffectReducer,
+    initialTypingEffects
+  );
+
+  return (
+    <TypingEffectContext.Provider value={[typingEffects, dispatch]}>
+      {children}
+    </TypingEffectContext.Provider>
+  );
+};
+
+/**
+ * TODO:
+ *
+ * 1. Store a list of all the typing effects
+ * 2. Delay each subsequent typing effect by the time it takes to show the previous one
+ * 3. Add a prop which allows pausing the typing effect at the end of the current one
+ *
+ * @param param0
+ * @returns
+ */
+const TypingEffect = ({ children, typingSpeed = 60 }: Props) => {
   const [typedText, setTypedText] = useState("");
   const [i, setI] = useState(0);
   const mounted = useRef(false);
+  const [typingEffects, dispatch] = useContext(TypingEffectContext);
 
   useEffect(() => {
     mounted.current = true;
   }, []);
 
-  useLayoutEffect(() => {
-    const delay = Math.floor(
-      Math.random() * (maxSpeed - minSpeed + 1) + minSpeed
-    );
+  useEffect(() => {
+    const hasBeenAdded =
+      Number(typingEffects?.findIndex((t) => t?.text === children)) > -1;
 
+    if (mounted.current && !hasBeenAdded) {
+      dispatch &&
+        dispatch({
+          type: "ADD",
+          payload: {
+            text: children,
+            typingSpeed,
+          },
+        });
+    }
+  }, [children, typingSpeed, dispatch]);
+
+  useLayoutEffect(() => {
     if (mounted.current) {
       setTypedText((t) => t + children.charAt(i));
     }
@@ -27,9 +121,17 @@ const TypingEffect = ({ children, minSpeed = 50, maxSpeed = 100 }: Props) => {
     if (i < children.length) {
       setTimeout(() => {
         setI(i + 1);
-      }, delay);
+      }, typingSpeed);
+    } else {
+      dispatch &&
+        dispatch({
+          type: "FINISHED",
+          payload: {
+            text: children,
+          },
+        });
     }
-  }, [i, maxSpeed, minSpeed, children]);
+  }, [i, typingSpeed, children, dispatch]);
 
   return (
     <div className="typing-effect">
