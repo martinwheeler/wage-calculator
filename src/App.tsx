@@ -1,8 +1,12 @@
 import "./App.css";
 import Select from "./Select";
-import { calculatePay } from "./utils";
-import FinanceDataInput from "./Components/FinanceDataInput/FinanaceDataInput";
 import TypingEffect, { TypingEffectProvider } from "./Components/TypingEffect";
+
+const Button = ({ children }: { children: React.ReactNode }) => (
+  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-1 rounded">
+    {children}
+  </button>
+);
 
 function App() {
   return (
@@ -10,10 +14,11 @@ function App() {
       <div className="App">
         <div className="title">Wage Calculator</div>
         <div>
-          <TypingEffect>Hi there!</TypingEffect>
-        </div>
-        <div className="question">
-          <TypingEffect>Which one are you?</TypingEffect>
+          <TypingEffect initialDelay={500}>Hi there!</TypingEffect>
+          <br />
+          <TypingEffect initialDelay={1500}>
+            Which of the follow best describes you?
+          </TypingEffect>
         </div>
         <div className="answer">
           1. I need to figure out what to charge hourly, I'm currently on an
@@ -24,9 +29,9 @@ function App() {
           <Select items={[{ value: "hourly" }, { value: "daily" }]} /> rate,
           what should I be putting aside?
         </div>
-        <header className="total">
-          {calculatePay(750, 10, 27, 40.55).toFixed(2)}
-        </header>
+        <div className="mt-6">
+          <Button>Begin</Button>
+        </div>
       </div>
     </TypingEffectProvider>
   );

@@ -11,6 +11,7 @@ import React, {
 interface Props {
   children: string;
   typingSpeed?: number;
+  initialDelay?: number;
 }
 
 interface TypingEffectProps {
@@ -87,7 +88,11 @@ export const TypingEffectProvider = ({
  * @param param0
  * @returns
  */
-const TypingEffect = ({ children, typingSpeed = 60 }: Props) => {
+const TypingEffect = ({
+  children,
+  typingSpeed = 60,
+  initialDelay = 5250,
+}: Props) => {
   const [typedText, setTypedText] = useState("");
   const [i, setI] = useState(0);
   const mounted = useRef(false);
@@ -102,23 +107,29 @@ const TypingEffect = ({ children, typingSpeed = 60 }: Props) => {
       Number(typingEffects?.findIndex((t) => t?.text === children)) > -1;
 
     if (mounted.current && !hasBeenAdded) {
-      dispatch &&
-        dispatch({
-          type: "ADD",
-          payload: {
-            text: children,
-            typingSpeed,
-          },
-        });
+      setTimeout(() => {
+        // dispatch &&
+        //   dispatch({
+        //     type: "ADD",
+        //     payload: {
+        //       text: children,
+        //       typingSpeed,
+        //     },
+        //   });
+      }, initialDelay);
     }
   }, [children, typingSpeed, dispatch]);
 
   useLayoutEffect(() => {
-    if (mounted.current) {
-      setTypedText((t) => t + children.charAt(i));
+    if (mounted.current && i >= 1) {
+      setTypedText((t) => t + children.charAt(i - 1));
     }
 
-    if (i < children.length) {
+    if (i === 0) {
+      setTimeout(() => {
+        setI(i + 1);
+      }, initialDelay);
+    } else if (i < children.length) {
       setTimeout(() => {
         setI(i + 1);
       }, typingSpeed);
@@ -134,9 +145,9 @@ const TypingEffect = ({ children, typingSpeed = 60 }: Props) => {
   }, [i, typingSpeed, children, dispatch]);
 
   return (
-    <div className="typing-effect">
-      <p className="text">{typedText}</p>
-      <span className="cursor"></span>
+    <div className="typing-effect inline">
+      <p className="text inline">{typedText}</p>
+      <span className="cursor inline"></span>
     </div>
   );
 };
