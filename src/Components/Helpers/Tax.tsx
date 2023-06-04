@@ -37,29 +37,29 @@ export default function Tax(props: Props) {
 
     switch (props.circumstance) {
         case ("australian-resident"):
-            (props.net_income > 23365) ? tax += props.medicare_levy * props.net_income : null // This depends on whether one is a senior or not (SAPTO), and whether you have a spouse and kids
+            tax += (props.net_income > 23365) ? props.medicare_levy * props.net_income : 0 // This depends on whether one is a senior or not (SAPTO), and whether you have a spouse and kids
             aus_resident_tax.map((bracket) => {
-                bracket[0] <= props.net_income && bracket[1] >= props.net_income ? tax += (bracket[2] + (props.net_income - bracket[2]) * bracket[3]) : null
+                tax += (bracket[0] <= props.net_income && bracket[1] >= props.net_income) ? (bracket[2] + (props.net_income - bracket[0]) * bracket[3]) : 0
             }
             )
             break;
         case ("foreign-resident"):
-            (props.net_income > 23365) ? tax += props.medicare_levy * props.net_income : null // This depends on whether one is a senior or not (SAPTO), and whether you have a spouse and kids
+            tax += (props.net_income > 23365) ? props.medicare_levy * props.net_income : 0 // This depends on whether one is a senior or not (SAPTO), and whether you have a spouse and kids
             foreign_resident_tax.map((bracket) => {
-                bracket[0] <= props.net_income && bracket[1] >= props.net_income ? tax += (bracket[2] + (props.net_income - bracket[2]) * bracket[3]) : null
+                tax += (bracket[0] <= props.net_income && bracket[1] >= props.net_income) ? (bracket[2] + (props.net_income - bracket[0]) * bracket[3]) : 0
             }
             )
             tax += props.medicare_levy * tax
             break;
         case ("working-holiday-maker"):
             working_holiday_tax.map((bracket) => {
-                bracket[0] <= props.net_income && bracket[1] >= props.net_income ? tax = (bracket[2] + (props.net_income - bracket[2]) * bracket[3]) : null
+                tax += (bracket[0] <= props.net_income && bracket[1] >= props.net_income) ? (bracket[2] + (props.net_income - bracket[0]) * bracket[3]) : 0
             }
             )
             break;
         default:
             return 0;
     }
-    return tax;
+    return tax.toFixed(2);
 }
 

@@ -4,6 +4,7 @@ import TypingEffect from "./Components/TypingEffect";
 import { Routes, Link, Route, useSearchParams } from "react-router-dom";
 import { ReactNode, useState } from "react";
 import { TypingEffectProvider } from "./Context/TypingEffectProvider";
+import Tax from "./Components/Helpers/Tax"
 
 const Button = ({ children }: { children: React.ReactNode }) => (
   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-1 rounded">
@@ -36,9 +37,11 @@ const FadeIn = ({
 
 const Welcome = () => {
   const [rateValue, setRateValue] = useState("hourly" as string);
+  var tax = Tax({ net_income: 45001, circumstance: "australian-resident", medicare_levy: 0.02, higher_education_loan: 0, tax_offsets: 0, tax_credits: 0 })
 
   return (
     <TypingEffectProvider>
+      <h1>{tax}</h1>
       <div className="mb-2 sm:mb-6">
         <TypingEffect element="h1">Hi there!</TypingEffect>
         <br />
