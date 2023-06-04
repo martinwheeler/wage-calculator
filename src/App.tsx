@@ -37,11 +37,9 @@ const FadeIn = ({
 
 const Welcome = () => {
   const [rateValue, setRateValue] = useState("hourly" as string);
-  var tax = Tax({ net_income: 45001, circumstance: "australian-resident", medicare_levy: 0.02, higher_education_loan: 0, tax_offsets: 0, tax_credits: 0 })
 
   return (
     <TypingEffectProvider>
-      <h1>{tax}</h1>
       <div className="mb-2 sm:mb-6">
         <TypingEffect element="h1">Hi there!</TypingEffect>
         <br />
