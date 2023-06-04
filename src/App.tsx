@@ -71,19 +71,24 @@ const Welcome = () => {
   );
 };
 
-const StepOne = () => (
-  <TypingEffectProvider>
-    <div>
-      <TypingEffect>I see, so you are on an annual salary.</TypingEffect>
-      <br />
-      <br />
-      <TypingEffect>How much do you make per year?</TypingEffect>
-      <br />
-      <br />
-      <FadeIn>Form Goes here</FadeIn>
-    </div>
-  </TypingEffectProvider>
-);
+const StepOne = () => {
+  const [annualSalary, setAnnualSalary] = useState<number | undefined>();
+  return (
+    <TypingEffectProvider>
+      <div>
+        <TypingEffect>I see, so you are on an annual salary.</TypingEffect>
+        <br />
+        <br />
+        <TypingEffect>How much do you make per year?</TypingEffect>
+        <br />
+        <br />
+        <FadeIn>
+          <input type='number' value={annualSalary} onChange={(event) => { setAnnualSalary(parseInt(event.target.value)) }} className='salary-input' />
+        </FadeIn>
+      </div>
+    </TypingEffectProvider>
+  )
+}
 
 const StepTwo = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -108,7 +113,7 @@ const StepTwo = () => {
       </div>
     </TypingEffectProvider>
   );
-};
+}
 
 function App() {
   return (
