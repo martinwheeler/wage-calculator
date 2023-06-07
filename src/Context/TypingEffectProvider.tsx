@@ -1,38 +1,43 @@
-import { createContext, useEffect, useReducer, useRef } from "react";
+import {
+  createContext,
+  Dispatch,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+} from "react";
 import { finished } from "stream";
 
-interface TypingEffects {
-  text: string;
-  typingSpeed: number;
-  finished: boolean;
-  duration?: number;
-}
+const initialData = {
+  typingEffects: [] as TypingEffects[],
+  currentTypingEffectIndex: 0,
+  totalTimeTyping: 0,
+};
 
 export const TypingEffectContext = createContext<
   [
-    { typingEffects: TypingEffects[]; currentTypingEffectIndex: number },
-    React.Dispatch<any>
+    {
+      typingEffects: TypingEffects[];
+      currentTypingEffectIndex: number;
+      totalTimeTyping: number;
+    },
+    Dispatch<any>
   ]
 >([
   {
     typingEffects: [],
     currentTypingEffectIndex: 0,
+    totalTimeTyping: 0,
   },
   () => {},
 ]);
 
-const initialData = {
-  typingEffects: [] as TypingEffects[],
-  currentTypingEffectIndex: 0,
-};
-
-const tapLog = (data: any) => {
-  console.log(data);
-  return data;
-};
-
 const typingEffectReducer = (
-  state: { typingEffects: TypingEffects[]; currentTypingEffectIndex: number },
+  state: {
+    typingEffects: TypingEffects[];
+    currentTypingEffectIndex: number;
+    totalTimeTyping: number;
+  },
   action: any
 ) => {
   switch (action.type) {
@@ -54,17 +59,22 @@ const typingEffectReducer = (
         return state;
       } else {
         const { typingSpeed, text } = action.payload;
-        return tapLog({
+        const duration = ((text.length * typingSpeed) / 1000) as number;
+        const roundedDuration = Math.ceil(duration / 0.25) * 0.25;
+
+        return {
           ...state,
           typingEffects: [
             ...state.typingEffects,
             {
               ...action.payload,
               finished: false,
-              duration: text.length - 1 * typingSpeed,
+              // Convert to nearest quarter second
+              duration: roundedDuration,
             },
           ],
-        });
+          totalTimeTyping: state.totalTimeTyping + roundedDuration,
+        };
       }
 
     case "FINISHED":
@@ -72,8 +82,8 @@ const typingEffectReducer = (
       if (action.payload.index === -1) {
         return state;
       } else {
-        console.log("Marking as finished", action.payload.index);
         return {
+          ...state,
           currentTypingEffectIndex:
             state.currentTypingEffectIndex < state.typingEffects.length - 1
               ? state.currentTypingEffectIndex + 1
@@ -100,24 +110,10 @@ export const TypingEffectProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [{ typingEffects, currentTypingEffectIndex }, dispatch] = useReducer(
-    typingEffectReducer,
-    initialData
-  );
-
-  //   useEffect(() => {
-  //     // Once one is finished go to the next one
-  //     if (
-  //       typingEffects.length &&
-  //       typingEffects[currentTypingEffectIndex].finished
-  //     ) {
-  //       dispatch("INCREMENT_EFFECT_INDEX");
-
-  //       console.log(currentTypingEffectIndex);
-  //     }
-  //   }, [typingEffects]);
-
-  //   console.log({ indexToType: currentTypingEffectIndex });
+  const [
+    { typingEffects, currentTypingEffectIndex, totalTimeTyping },
+    dispatch,
+  ] = useReducer(typingEffectReducer, initialData);
 
   return (
     <TypingEffectContext.Provider
@@ -125,6 +121,7 @@ export const TypingEffectProvider = ({
         {
           typingEffects,
           currentTypingEffectIndex: currentTypingEffectIndex,
+          totalTimeTyping,
         },
         dispatch,
       ]}
@@ -133,3 +130,16 @@ export const TypingEffectProvider = ({
     </TypingEffectContext.Provider>
   );
 };
+
+export const useTypingEffect = (): [typeof initialData, Dispatch<any>] => {
+  const [typingEffectValue, dispatch] = useContext(TypingEffectContext);
+
+  return [typingEffectValue, dispatch];
+};
+
+interface TypingEffects {
+  text: string;
+  typingSpeed: number;
+  finished: boolean;
+  duration: number;
+}
