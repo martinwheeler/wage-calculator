@@ -16,7 +16,7 @@ interface Props {
 
 const TypingEffect = ({
   children,
-  typingSpeed = 60,
+  typingSpeed = 35,
   initialDelay = 5250,
   element = "p",
 }: Props) => {

@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export const FadeIn = ({
     children,
     className,
-    delay = "4.5s",
+    delay = "6.5s",
     duration = "0.5s",
     ...props
 }: {

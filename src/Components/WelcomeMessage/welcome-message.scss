@@ -1,0 +1,20 @@
+.welcome-input {
+    max-width: 150px;
+    color: black;
+    border-bottom: solid;
+    border-bottom-width: 2px;
+    text-align: center;
+    outline: none;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

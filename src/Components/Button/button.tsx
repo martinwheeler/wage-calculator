@@ -1,5 +1,5 @@
 export const Button = ({ children }: { children: React.ReactNode }) => (
-    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-1 rounded">
+    <button className="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-0.5 px-1 rounded">
         {children}
     </button>
 );

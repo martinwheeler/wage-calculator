@@ -1,5 +1,5 @@
 import "./App.css";
-import Select from "./Select";
+import Select from "./Components/Select/select";
 import TypingEffect from "./Components/TypingEffect";
 import { Routes, Link, Route, useSearchParams } from "react-router-dom";
 import { ReactNode, useState } from "react";
@@ -63,7 +63,6 @@ function App() {
         element={
           <>
             <div className="App px-2">
-              <div className="title mt-2 sm:mt-6">Wage Calculator</div>
               <Header />
               <Routes>
                 <Route path="/" element={<WelcomeMessage />} />
