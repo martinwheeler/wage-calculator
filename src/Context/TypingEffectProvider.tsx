@@ -72,7 +72,7 @@ const typingEffectReducer = (
       if (action.payload.index === -1) {
         return state;
       } else {
-        console.log("Marking as finished", action.payload.index);
+        // console.log("Marking as finished", action.payload.index);
         return {
           currentTypingEffectIndex:
             state.currentTypingEffectIndex < state.typingEffects.length - 1
