@@ -11,7 +11,18 @@ import Select from "../../Components/Select/select";
 import "./Home.scss";
 
 const Home = () => {
-  const [rateValue, setRateValue] = useState("hour" as string);
+  const [rateValue, setRateValue] = useState("hour");
+  const [isDirty, setIsDirty] = useState(false);
+
+  const handleSetDirty = (...props: any) => {
+    console.log("set dirty", props);
+    setIsDirty(true);
+  };
+  const handleSetRateValue = (...props: any) => {
+    console.log("set rate value", props);
+    handleSetDirty();
+    setRateValue.apply(this, props);
+  };
 
   return (
     <div className="welcome-message-container">
@@ -35,18 +46,19 @@ const Home = () => {
             (tax, super, sick days and even a quick vaycay)
           </TypingEffect>
         </div>
-        <FadeIn className="answer">
+        <FadeIn delay="9s" className="answer">
           I charge{" "}
           <NumericFormat
             className="welcome-input"
             value={0}
             thousandSeparator=","
             prefix={"$"}
+            onChange={handleSetDirty}
           />
           per&nbsp;{" "}
           <Select
             items={[{ value: "hour" }, { value: "day" }]}
-            onChange={setRateValue}
+            onChange={handleSetRateValue}
           />
           &nbsp; and work{" "}
           <NumericFormat
@@ -54,23 +66,27 @@ const Home = () => {
             value={0}
             thousandSeparator=","
             prefix={"$"}
+            onChange={handleSetDirty}
           />{" "}
           &nbsp;
           <Select
             items={[{ value: "hour" }, { value: "day" }]}
-            onChange={setRateValue}
+            onChange={handleSetRateValue}
           />
           &nbsp; per&nbsp;{" "}
           <Select
             items={[{ value: "hour" }, { value: "day" }]}
-            onChange={setRateValue}
+            onChange={handleSetRateValue}
           />
-        </FadeIn>
-        <FadeIn className="mt-2 sm:mt-6 mb-2 sm:mb-6">
-          {/* &nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp; */}
-          <Link to={`/step/2?rate=${rateValue}`}>
-            <Button>Divvy Up</Button>
-          </Link>
+          {isDirty && (
+            <FadeIn delay="0s">
+              <div className="mt-2 sm:mt-6 mb-2 sm:mb-6">
+                <Link to={`/step/2?rate=${rateValue}`}>
+                  <Button>Divvy Up</Button>
+                </Link>
+              </div>
+            </FadeIn>
+          )}
         </FadeIn>
       </TypingEffectProvider>
     </div>
